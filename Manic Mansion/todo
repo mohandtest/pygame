@@ -1,0 +1,37 @@
+Plan for spillet:
+
+Avgrenset frisone for mennesker og sauer
+
+sone1: menneskesone - venstre side
+    menneske starter her
+    hvis menneske kommer hit med en sau skal:
+        poeng øke med en
+        sauen skal fjernes
+        spillerens fart skal settes til normalt
+        ny sau skal dukke opp på sauesonen
+        ny hindrings- og spøkelsesobjekt skal dukke opp
+
+sone2: midtsone med hindringsobjekter og spøkelser - midten
+    Plasser 3 hindringsobjekter tilfeldig på spillebrettet
+        Spiller kolliderer med hindringsobjekt
+        Spøkelser kan gå gjennom
+    Plasser 3 spøkelser tilfeldig på spillebrettet
+        tilfeldig retning
+        kan ikke kollidere med hindringsobjekt
+        dersom spøkelse kolliderer med spiller skal spillet avsluttes
+
+sone3: sauesone - høyre side
+    tre sauer skal dukke opp
+    hvis spiller rører sau:
+        hvis spiller ikke holder sau
+            sau skal forsvinne
+            spiller skal "holde" sau
+            spillefart skal gå ned
+    ellers
+            spillet stopper
+    
+
+spiller:
+    fart int
+    bevegelse int
+    baererSau bool
