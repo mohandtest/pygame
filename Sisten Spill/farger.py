@@ -1,0 +1,5 @@
+HVIT = (255, 255, 255)  # For tomme celler - " "
+SVART = (0, 0, 0) # For veggceller - "W"
+GUL = (255, 255, 0) # For nektarceller - "N"
+ROED = (255, 0, 0) # For rød spiller - "R"
+BLAA = (0, 0, 255) # For blå spiller - "B"
