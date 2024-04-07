@@ -2,8 +2,12 @@
 BREDDE = 1000
 HOEYDE= 600
 FPS = 60
+
+# Startsvariabler for en evt config
+STARTS_ANTALL = 3
 STARTSFART = 4
-FARTSFAKTOR = 1/3 * STARTSFART
+STARTSFART_SPOEKELSE = 5
+
 # Farger
 HVIT = (255, 255, 255)
 SVART = (0, 0, 0)

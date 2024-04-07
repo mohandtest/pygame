@@ -2,7 +2,11 @@ from math import sqrt
 from pygame import draw, sprite, Vector2, Rect, Surface
 from pygame.locals import (K_UP, K_DOWN, K_LEFT, K_RIGHT)
 
-
+""" Spillobjekt klassen - Denne skiller seg ut fra UML-diagrammet siden jeg ikke har valgt å ha en
+    plasserings- og flytt metode siden sauene og hindringene ikke skal flytte seg, samt at bevegelsen til
+    mennesket og spøkelset er forskjellige.
+    Her har jeg også for enkeltheten skyld lagt til kollisjons sjekken i stedet for kun i mennesket.
+""" 
 class SuperKarakter(sprite.Sprite):
     """Klasse for karakter"""
     def __init__(self, x, y, farge, vindusobjekt, bredde = 20, hoeyde = 20):
@@ -21,12 +25,18 @@ class SuperKarakter(sprite.Sprite):
 
 
     def tegn(self):
+      """Tegner karaketeren som et rektankgel med de gitte parameterene"""
       draw.rect(self.vindusobjekt, self.farge, (self.rect.x, self.rect.y, self.bredde, self.hoeyde)) 
 
     def sjekk_kollisjon(self, karakter):
         """Sjekker om karakteren kolliderer med hindringen"""
         return self.rect.colliderect(karakter.rect)
 
+
+""" Her har jeg valgt å forenkle mennesket litt ved å flytte
+    bærsau() over til spilløkken for å gjøre det enklere å avslutte spillløkken dersom
+    mennesken prøver å plukke opp mer enn en sau.
+"""
 class Menneske(SuperKarakter):
     def __init__(self, x, y, fart, farge, vindusobjekt, poeng = 0):
         super().__init__(x, y, farge, vindusobjekt, bredde = 20 , hoeyde= 20)
@@ -45,16 +55,19 @@ class Menneske(SuperKarakter):
         if taster[K_RIGHT]:
             retning.x += 1
 
-        # Hvis spilleren beveger seg diagonalt, normaliser retningen og deler med sqrt(2)
+        # Hvis spilleren beveger seg diagonalt, normaliseres retningen
+        # altså returneres en vektor med samme retning men størrelse på 1
+        # ellers vil den diagonale farten alltid være større med en faktor på roten av 2
         if retning.length() > 0:
             retning.normalize_ip()
             retning *= self.fart
+
         retning = round(retning)
         # Beregn ny posisjon
         ny_x = self.rect.x + retning.x
         ny_y = self.rect.y + retning.y
 
-        # Opprett en rektangel for å representere den potensielle nye posisjonen
+        # Oppretter en rektangel for å representere den potensielle nye posisjonen
         ny_rektangel = Rect(ny_x, ny_y, self.bredde, self.hoeyde)
 
         # Sjekk for kollisjon med hindringer
@@ -83,8 +96,15 @@ class Menneske(SuperKarakter):
 
         # Oppdater posisjonen
         self.rect = ny_rektangel
+    
+    def oekPoeng(self):
+        self.poeng += 1
 
-
+    def reduserFart(self):
+        self.fart *= 2/3
+    
+    def oekFart(self):
+        self.fart *= 3/2
 
 class Spoekelse(SuperKarakter):
     """Klasse for å representere et hinder"""
@@ -98,17 +118,17 @@ class Spoekelse(SuperKarakter):
 
     def flytt(self):
         """Metode for å flytte spøkelset"""
-        # Sjekk om hinderet er i midtsonen
+        # Sjekk om spoekelset er i midtsonen
         if self.sone.colliderect(self.rect):
-            # Sjekker om hinderet er utenfor venstre/høyre kant
+            # Sjekker om spoekelset er utenfor venstre/høyre kant
             if ((self.x - self.bredde) <= self.sone.left) or ((self.x + self.bredde) >= self.sone.right):
                 self.xFart = -self.xFart
 
-            # Sjekker om hinderet er utenfor øvre/nedre kant
+            # Sjekker om spoekelset er utenfor øvre/nedre kant
             if ((self.y - self.hoeyde) <= self.sone.top) or ((self.y + self.hoeyde) >= self.sone.bottom):
                 self.yFart = -self.yFart
 
-        # Flytter hinderet
+        # Flytter spoekelset
         self.x += self.xFart
         self.y += self.yFart
         self.rect.centerx = self.x

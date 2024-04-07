@@ -3,7 +3,13 @@ from konstanter import *
 from karakterer import *
 import random
 
-# For å gi visuelt inntrykk av sonene. Har delt brettet i 6 deler, der midtsonen er 4/6 stor
+""" For å forenkle spillet, har jeg delt spillbrettet i tre soner fordi
+    da kan jeg enkelt bestemme hvor hva er med kollisjon heller enn å lage
+    et grid feks.
+    I tillegg har jeg ingen egen spillebrett klasse og har heller valgt å legge til dens
+    funksjonalitet i main løkka fordi det var enklere for meg heller enn å konfigurere ulike metoder
+    for en spill løkek
+"""
 menneske_sone = pygame.Rect(0, 0, BREDDE//6, HOEYDE)
 midtsone = pygame.Rect(BREDDE//6, 0, 2*BREDDE//3, HOEYDE)
 saue_sone = pygame.Rect(5*BREDDE//6, 0, 1*BREDDE//6, HOEYDE)
@@ -31,14 +37,13 @@ def main():
 
     # Karakterer
     menneske = Menneske((BREDDE/6)/2, HOEYDE/2, STARTSFART, BLAA, vindu)
-    starts_antall = 3
 
-    for _ in range(starts_antall):
+    for _ in range(STARTS_ANTALL):
         # Generer tilfeldige koordinater innenfor midtsonen
         x = random.randint(midtsone.left + 30, midtsone.right - 30)
         y = random.randint(midtsone.top + 30, midtsone.bottom - 30)
         # Oppretter spøkelse
-        spokelse = Spoekelse(x, y, ROED, vindu, 5, 5, midtsone)
+        spokelse = Spoekelse(x, y, ROED, vindu, STARTSFART_SPOEKELSE, STARTSFART_SPOEKELSE, midtsone)
         spoekelser.add(spokelse)
         hindring = Hindring(x,y,SVART,vindu)
         hindringer.append(hindring)
@@ -77,7 +82,7 @@ def main():
         for sau in kolliderende_sauer:
             if holdt_sau is None:
                 holdt_sau = sau
-                menneske.fart -= FARTSFAKTOR  # Reduserer spillerens fart når han holder på en sau
+                menneske.reduserFart()  # Reduserer spillerens fart når den holder på en sau
                 menneske.farge = GROENN
             else:
                 # Spillet avsluttes hvis spilleren allerede holder på en sau og treffer en annen sau
@@ -87,10 +92,10 @@ def main():
         if menneske.rect.colliderect(menneske_sone):
             if holdt_sau is not None:
                 # Øker poeng og fjerner sau
-                menneske.poeng += 1
+                menneske.oekPoeng()
                 sauer.remove(holdt_sau)
                 holdt_sau = None
-                menneske.fart += FARTSFAKTOR  # Setter spillerens fart tilbake til normalt
+                menneske.oekFart()  # Setter spillerens fart tilbake til normalt
                 menneske.farge = BLAA
 
                 # Legger til ny sau
@@ -121,7 +126,7 @@ def main():
         for hindring in hindringer:
             hindring.tegn()
 
-        vis_poeng(vindu,menneske.poeng)
+        vis_poeng(vindu,menneske.poeng) # Oppdaterer poengsummen
         clock.tick(FPS)     # Gjør at loopen tikker etter FPS - Stabilitet
         pygame.display.flip()  
 
