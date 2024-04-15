@@ -24,6 +24,7 @@ clock = pygame.time.Clock()     # For å sette FPS
 alle_sprites = pygame.sprite.Group()
 # alle_sprites.add(sprite)
 
+
 # Spill løkka
 fortsett = True
 while fortsett:
@@ -33,14 +34,16 @@ while fortsett:
     for event in pygame.event.get():        # Nødvendig for pygame
         # Ser etter om pygame skal avslutte
         if event.type == pygame.QUIT:
-            running = False
+            fortsett = False
+    # Henter en ordbok med status for alle tastatur-taster
+    trykkede_taster = pygame.key.get_pressed()
 
 
     #2 Update
     alle_sprites.update()
 
     #3 Tegner bakgrunnen
-    vindu.fill(SVART)
+    vindu.fill(HVIT)
 
     alle_sprites.draw(vindu)
     ########################
